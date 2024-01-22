@@ -9,6 +9,7 @@ type User {
   role: Role!
   password: String!
   createdBy: User
+  createdAt: String
   updatedAt: String
 }
 
@@ -68,6 +69,7 @@ input CreateUserInput {
   birthday: String
   gender: Gender
   createdById: String
+  createdAt: String
 }
 
 input UpdateUserInput {

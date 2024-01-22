@@ -1,9 +1,8 @@
-import { title } from "@/components/primitives";
+import React from "react";
+import { Users } from "@/components/users";
 
-export default function UsersPage() {
-	return (
-		<div>
-			<h1 className={title()}>Users</h1>
-		</div>
-	);
-}
+const users = () => {
+  return <Users />;
+};
+
+export default users;

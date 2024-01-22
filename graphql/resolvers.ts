@@ -1,8 +1,8 @@
 import { GraphQLError } from "graphql";
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
-import { Context } from "@apollo/client";
 import { prisma } from "@/prisma/db";
+import { Context } from "@/pages/api/graphql";
 
 export const resolvers = {
   Query: {
