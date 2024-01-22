@@ -1,4 +1,4 @@
-const typeDefs = `#graphql
+export const typeDefs = `#graphql
   type User {
     id: ID
     email: String!
@@ -21,32 +21,12 @@ const typeDefs = `#graphql
     M, F
   }
 
-  ### Staff manage 
-  type Query {
-    """ Хэрэглэгчийн жагсаалтаас имэйлээр хайх """
-    searchUserByEmail(email: String!): [User!]!
-
-    """ Хэрэглэгчийн жагсаалтаас роллоор филтердэж авах """
-    users(role: [Role!]): [User!]!
-
-    """ Хэрэглэгчийн мэдээлэл авах """
-    user(id: ID!): User
-  }
-
   type AuthPayload { 
     token: String!
     user: User!
   } 
 
-  type Mutation {
-    signupUser(input: AuthUserInput!): AuthPayload
-    login(input: AuthUserInput!): AuthPayload
-    createUser(input: CreateUserInput!): User
-    updateUser(input: UpdateUserInput!): User
-    deleteUser(id: String!): User
-  }
-
-  input AuthUserInput {
+   input AuthUserInput {
     email: String!
     password: String!
   }
@@ -71,6 +51,18 @@ const typeDefs = `#graphql
     birthday: String
     gender: Gender
   }
-`;
 
-export default typeDefs;
+  type Query {
+    searchUserByEmail(email: String!): [User!]!
+    users(role: [Role!]): [User!]!
+    user(id: ID!): User
+  }
+  
+   type Mutation {
+    signupUser(input: AuthUserInput!): AuthPayload
+    login(input: AuthUserInput!): AuthPayload
+    createUser(input: CreateUserInput!): User
+    updateUser(input: UpdateUserInput!): User
+    deleteUser(id: String!): User
+  }
+`;

@@ -1,13 +1,38 @@
 import { GraphQLError } from "graphql";
 import * as jwt from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
+import { Context } from "@apollo/client";
+import { prisma } from "@/prisma/db";
 
-const prisma = new PrismaClient();
+export const resolvers = {
+  Query: {
+    searchUserByEmail: (_: any, args: any, context: Context) =>
+      prisma.user.findMany({
+        where: {
+          email: {
+            contains: args.email,
+          },
+        },
+      }),
+    users: async (_: any, args: any, context: Context) => {
+      return await prisma.user
+        .findMany()
+        .then((data: any) => data.filter((user: any) => args.role.find((r: String) => r === user.role)));
+    },
+    user: async (_: any, args: any, context: Context) => {
+      const { id } = args;
+      const user = await prisma.user.findUnique({
+        where: { id },
+      });
+      if (!user) {
+        throw new Error(`${id} ID-тай хэрэглэгч байхгүй байна.`);
+      }
 
-const resolvers = {
+      return user;
+    },
+  },
   Mutation: {
-    signupUser: async (_: any, { input }) => {
+    signupUser: async (_: any, { input }: any, context: Context) => {
       const hashedPassword = await bcrypt.hash(input.password, 10);
 
       try {
@@ -23,29 +48,23 @@ const resolvers = {
         const token = jwt.sign({ userId: user.id }, "APP_SECRET");
         return { token, user };
       } catch (error) {
-        throw new GraphQLError(error.message, {
-          extensions: {
-            code: error.code,
-          },
-        });
+        // throw new GraphQLError(error.message, {
+        //   extensions: {
+        //     code: error.code,
+        //   },
+        // });
       }
     },
-    createUser: async (
-      _: any,
-      { input }: any,
-      context: {
-        // authenticatedUser: { id: any }
-      }
-    ) => {
+    createUser: async (_: any, { input }: any, context: Context) => {
       const hashedPassword = await bcrypt.hash(input.password, 10);
 
       try {
         let createdById = null;
 
         // Check if the user is authenticated (logged in)
-        // if (context.authenticatedUser) {
+        // if (authenticatedUser) {
         //   // Set createdById to the authenticated user's id
-        //   createdById = context.authenticatedUser.id;
+        //   createdById = authenticatedUser.id;
         // }
 
         // Create the new user
@@ -65,14 +84,14 @@ const resolvers = {
 
         return newUser;
       } catch (error) {
-        throw new GraphQLError(error.message, {
-          extensions: {
-            code: error.code,
-          },
-        });
+        // throw new GraphQLError(error.message, {
+        //   extensions: {
+        //     code: error.code,
+        //   },
+        // });
       }
     },
-    updateUser: async (_: any, { input: { id, name, phone, address, birthday, gender } }: any) => {
+    updateUser: async (_: any, { input: { id, name, phone, address, birthday, gender } }: any, context: Context) => {
       try {
         const user = await prisma.user.findUnique({
           where: { id },
@@ -88,14 +107,14 @@ const resolvers = {
         });
         return { ...user, ...updatedUser };
       } catch (error) {
-        throw new GraphQLError(error.message, {
-          extensions: {
-            code: error.code,
-          },
-        });
+        // throw new GraphQLError(error.message, {
+        //   extensions: {
+        //     code: error.code,
+        //   },
+        // });
       }
     },
-    deleteUser: async (_: any, { id }) => {
+    deleteUser: async (_: any, { id }: any, context: Context) => {
       const user = await prisma.user.findUnique({
         where: { id },
       });
@@ -109,31 +128,4 @@ const resolvers = {
       return user;
     },
   },
-  Query: {
-    searchUserByEmail: (_: any, { email }) =>
-      prisma.user.findMany({
-        where: {
-          email: {
-            contains: email,
-          },
-        },
-      }),
-    users: async (_: any, { role }) => {
-      return await prisma.user
-        .findMany()
-        .then((data) => data.filter((user) => role.find((r: String) => r === user.role)));
-    },
-    user: async (_: any, { id }) => {
-      const user = await prisma.user.findUnique({
-        where: { id },
-      });
-      if (!user) {
-        throw new Error(`${id} ID-тай хэрэглэгч байхгүй байна.`);
-      }
-
-      return user;
-    },
-  },
 };
-
-export default resolvers;
