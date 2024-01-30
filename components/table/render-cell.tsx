@@ -27,26 +27,18 @@ export const RenderCell = ({ user, columnKey }: any) => {
     //   );
     case "role":
       return (
-        <div>
-          <div>
-            <span>{cellValue}</span>
-          </div>
-          <div>
-            <span>{user.team}</span>
-          </div>
-        </div>
-      );
-    case "status":
-      return (
-        <Chip
-          size="sm"
-          variant="flat"
-          color={cellValue === "active" ? "success" : cellValue === "paused" ? "danger" : "warning"}
-        >
+        <Chip size="sm" variant="flat" color={cellValue === "ADMIN" ? "success" : "warning"}>
           <span className="capitalize text-xs">{cellValue}</span>
         </Chip>
       );
-
+    case "gender":
+      return (
+        cellValue && (
+          <Chip size="sm" variant="flat" color={cellValue === "MALE" ? "primary" : "secondary"}>
+            <span className="capitalize text-xs">{cellValue}</span>
+          </Chip>
+        )
+      );
     case "actions":
       return (
         <div className="flex items-center gap-4 ">

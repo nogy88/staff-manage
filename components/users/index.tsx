@@ -1,26 +1,17 @@
 "use client";
-import {
-  Table as TableUI,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableBody,
-  TableRow as TableRowUI,
-  getKeyValue,
-} from "@nextui-org/react";
-import { title } from "@/components/primitives";
-import { useMutation, useQuery } from "@apollo/client";
-import { ApplicationStatus, ExternalTable, User, Column } from "@/global/interfaces";
+import { useQuery } from "@apollo/client";
+import { Column } from "@/global/interfaces";
 import { CustomTable } from "@/components/table/table";
 import { AddUser } from "./add-user";
 import { GET_USERS } from "@/graphql/queries";
-import { useEffect, useState } from "react";
 
 const columns: Column[] = [
   { name: "ID", uid: "id" },
   { name: "EMAIL", uid: "email" },
   { name: "NAME", uid: "name" },
   { name: "ROLE", uid: "role" },
+  { name: "PHONE", uid: "phone" },
+  { name: "GENDER", uid: "gender" },
   { name: "ACTIONS", uid: "actions" },
 ];
 
@@ -29,9 +20,6 @@ export const Users = () => {
     variables: { role: ["ADMIN", "EMPLOYEE"] },
   });
 
-  useEffect(() => {
-    console.log(">>>>>>>>>data", data?.users);
-  }, [data]);
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
       <ul className="flex justify-between">

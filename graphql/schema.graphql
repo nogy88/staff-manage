@@ -19,8 +19,8 @@ enum Role {
 }
 
 enum Gender {
-  M
-  F
+  MALE
+  FEMALE
 }
 
 ### Staff manage

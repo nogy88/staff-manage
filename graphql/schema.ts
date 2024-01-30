@@ -18,7 +18,7 @@ export const typeDefs = `#graphql
   }
 
   enum Gender {
-    M, F
+    MALE, FEMALE
   }
 
   type AuthPayload { 

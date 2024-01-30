@@ -1,0 +1,5 @@
+{
+  "watch": ["pages/**/*.{js,jsx,ts,tsx}", "styles/**/*.css"],
+  "ext": "js json jsx ts tsx",
+  "exec": "next dev"
+}
